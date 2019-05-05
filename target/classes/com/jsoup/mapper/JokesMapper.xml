@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jsoup.mapper.JokesMapper">
+    <resultMap id="BaseResultMap" type="com.jsoup.pojo.Jokes">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="source" property="source" jdbcType="VARCHAR"/>
+        <result column="text" property="text" jdbcType="VARCHAR"/>
+        <result column="likes" property="likes" jdbcType="INTEGER"/>
+        <result column="hates" property="hates" jdbcType="INTEGER"/>
+        <result column="createTime" property="createtime" jdbcType="DATE"/>
+        <result column="updateTime" property="updatetime" jdbcType="DATE"/>
+        <result column="type_id" property="typeId" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    id, title, source, text, likes, hates, createTime, updateTime, type_id
+  </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.jsoup.pojo.JokesExample">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from jokes
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from jokes
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from jokes
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.jsoup.pojo.JokesExample">
+        delete from jokes
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.jsoup.pojo.Jokes">
+    insert into jokes (id, title, source, 
+      text, likes, hates, 
+      createTime, updateTime, type_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{text,jdbcType=VARCHAR}, #{likes,jdbcType=INTEGER}, #{hates,jdbcType=INTEGER}, 
+      #{createtime,jdbcType=DATE}, #{updatetime,jdbcType=DATE}, #{typeId,jdbcType=BIGINT}
+      )
+  </insert>
+    <!-- 新增jokeList -->
+    <insert id="insertJokeList" parameterType="java.util.List">
+        insert into jokes (id, title, source,
+        text, likes, hates,
+        createTime, updateTime, type_id
+        )
+        VALUES
+        <foreach collection="list" item="joke" separator=",">
+            (
+            #{joke.id,jdbcType=BIGINT}, #{joke.title,jdbcType=VARCHAR}, #{joke.source,jdbcType=VARCHAR},
+            #{joke.text,jdbcType=VARCHAR}, #{joke.likes,jdbcType=INTEGER}, #{joke.hates,jdbcType=INTEGER},
+            #{joke.createTime,jdbcType=DATE}, #{joke.updateTime,jdbcType=DATE}, #{joke.type_id,jdbcType=BIGINT}
+             )
+        </foreach>
+    </insert>
+    <insert id="insertSelective" parameterType="com.jsoup.pojo.Jokes">
+        insert into jokes
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="source != null">
+                source,
+            </if>
+            <if test="text != null">
+                text,
+            </if>
+            <if test="likes != null">
+                likes,
+            </if>
+            <if test="hates != null">
+                hates,
+            </if>
+            <if test="createtime != null">
+                createTime,
+            </if>
+            <if test="updatetime != null">
+                updateTime,
+            </if>
+            <if test="typeId != null">
+                type_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="source != null">
+                #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="text != null">
+                #{text,jdbcType=VARCHAR},
+            </if>
+            <if test="likes != null">
+                #{likes,jdbcType=INTEGER},
+            </if>
+            <if test="hates != null">
+                #{hates,jdbcType=INTEGER},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=DATE},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=DATE},
+            </if>
+            <if test="typeId != null">
+                #{typeId,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.jsoup.pojo.JokesExample" resultType="java.lang.Integer">
+        select count(*) from jokes
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update jokes
+        <set>
+            <if test="record.id != null">
+                id = #{record.id,jdbcType=BIGINT},
+            </if>
+            <if test="record.title != null">
+                title = #{record.title,jdbcType=VARCHAR},
+            </if>
+            <if test="record.source != null">
+                source = #{record.source,jdbcType=VARCHAR},
+            </if>
+            <if test="record.text != null">
+                text = #{record.text,jdbcType=VARCHAR},
+            </if>
+            <if test="record.likes != null">
+                likes = #{record.likes,jdbcType=INTEGER},
+            </if>
+            <if test="record.hates != null">
+                hates = #{record.hates,jdbcType=INTEGER},
+            </if>
+            <if test="record.createtime != null">
+                createTime = #{record.createtime,jdbcType=DATE},
+            </if>
+            <if test="record.updatetime != null">
+                updateTime = #{record.updatetime,jdbcType=DATE},
+            </if>
+            <if test="record.typeId != null">
+                type_id = #{record.typeId,jdbcType=BIGINT},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update jokes
+        set id = #{record.id,jdbcType=BIGINT},
+        title = #{record.title,jdbcType=VARCHAR},
+        source = #{record.source,jdbcType=VARCHAR},
+        text = #{record.text,jdbcType=VARCHAR},
+        likes = #{record.likes,jdbcType=INTEGER},
+        hates = #{record.hates,jdbcType=INTEGER},
+        createTime = #{record.createtime,jdbcType=DATE},
+        updateTime = #{record.updatetime,jdbcType=DATE},
+        type_id = #{record.typeId,jdbcType=BIGINT}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jsoup.pojo.Jokes">
+        update jokes
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="source != null">
+                source = #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="text != null">
+                text = #{text,jdbcType=VARCHAR},
+            </if>
+            <if test="likes != null">
+                likes = #{likes,jdbcType=INTEGER},
+            </if>
+            <if test="hates != null">
+                hates = #{hates,jdbcType=INTEGER},
+            </if>
+            <if test="createtime != null">
+                createTime = #{createtime,jdbcType=DATE},
+            </if>
+            <if test="updatetime != null">
+                updateTime = #{updatetime,jdbcType=DATE},
+            </if>
+            <if test="typeId != null">
+                type_id = #{typeId,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jsoup.pojo.Jokes">
+    update jokes
+    set title = #{title,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      text = #{text,jdbcType=VARCHAR},
+      likes = #{likes,jdbcType=INTEGER},
+      hates = #{hates,jdbcType=INTEGER},
+      createTime = #{createtime,jdbcType=DATE},
+      updateTime = #{updatetime,jdbcType=DATE},
+      type_id = #{typeId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
